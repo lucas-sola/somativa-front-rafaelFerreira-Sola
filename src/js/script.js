@@ -23,6 +23,26 @@ let unassignedIds = [];
 /** ID da imagem sendo arrastada */
 let draggedImageId = null;
 
+/** Sessão e publicações simuladas: permanecem apenas enquanto a página estiver aberta. */
+let currentUser = null;
+let publications = [];
+let currentListTitle = 'Minha Tier List';
+
+const defaultTiers = () => [
+  { id: 'S', label: 'S', color: '#FF7F7F', imageIds: [] },
+  { id: 'A', label: 'A', color: '#FFBF7F', imageIds: [] },
+  { id: 'B', label: 'B', color: '#FFDF7F', imageIds: [] },
+  { id: 'C', label: 'C', color: '#FFFF7F', imageIds: [] },
+  { id: 'D', label: 'D', color: '#BFFF7F', imageIds: [] },
+];
+
+const templates = [
+  { id: 'games', title: 'Jogos inesquecíveis', description: '16 jogos com capas oficiais para ranquear.', icon: '🎮', accent: 'from-violet-600 to-indigo-600', items: [['Hades', '🔥', '1145360'], ['Elden Ring', '⚔️', '1245620'], ['Red Dead Redemption 2', '🤠', '1174180'], ['GTA V', '🚗', '271590'], ['God of War', '🪓', '1593500'], ['The Last of Us Part I', '🎸', '1888930'], ['Cyberpunk 2077', '🤖', '1091500'], ['Baldur’s Gate 3', '🐉', '1086940'], ['Stardew Valley', '🌾', '413150'], ['Hollow Knight', '🐞', '367520'], ['Celeste', '🏔️', '504230'], ['Cuphead', '☕', '268910'], ['Among Us', '👨‍🚀', '945360'], ['Terraria', '🌲', '105600'], ['Dead by Daylight', '🪝', '381210'], ['It Takes Two', '🧶', '1426210']] },
+  { id: 'movies', title: 'Filmes para maratonar', description: '16 filmes do cult à aventura, para uma lista completa.', icon: '🎬', accent: 'from-red-600 to-orange-500', items: [['Interestelar', '🚀'], ['Parasita', '🏠'], ['Shrek', '🧅'], ['Barbie', '🎀'], ['Matrix', '💊'], ['Duna', '🏜️'], ['O Poderoso Chefão', '🍝'], ['Cidade de Deus', '🌇'], ['A Viagem de Chihiro', '🐉'], ['Vingadores Ultimato', '🦸'], ['Corra!', '🫣'], ['Clube da Luta', '🥊'], ['Mad Max', '🏎️'], ['Toy Story', '🤠'], ['Pantera Negra', '🐾'], ['Tudo em Todo Lugar', '🌌']] },
+  { id: 'food', title: 'Comidas favoritas', description: '16 sabores brasileiros e do mundo para decidir o topo.', icon: '🍔', accent: 'from-amber-500 to-rose-500', items: [['Pizza', '🍕'], ['Sushi', '🍣'], ['Hambúrguer', '🍔'], ['Açaí', '🫐'], ['Brigadeiro', '🍫'], ['Coxinha', '🍗'], ['Feijoada', '🫘'], ['Lasanha', '🍝'], ['Pão de queijo', '🧀'], ['Pastel', '🥟'], ['Tacos', '🌮'], ['Ramen', '🍜'], ['Churrasco', '🥩'], ['Sorvete', '🍨'], ['Pudim', '🍮'], ['Batata frita', '🍟']] },
+  { id: 'anime', title: 'Universo dos animes', description: '16 personagens e títulos que marcaram gerações.', icon: '⚡', accent: 'from-cyan-500 to-fuchsia-600', items: [['Naruto', '🍥'], ['Goku', '🐉'], ['Luffy', '🏴‍☠️'], ['Gojo', '🕶️'], ['Tanjiro', '🌊'], ['Mikasa', '⚔️'], ['Levi', '🪽'], ['Saitama', '👊'], ['Sailor Moon', '🌙'], ['Ichigo', '🟠'], ['Edward Elric', '🦾'], ['Light Yagami', '📓'], ['Spike Spiegel', '🚬'], ['Hinata', '🏐'], ['Eren', '🧣'], ['Frieren', '🪄']] },
+];
+
 // ---------- Seletores DOM ----------
 
 const tierContainer = document.getElementById('tier-container');
@@ -31,6 +51,18 @@ const poolEmptyEl = document.getElementById('pool-empty');
 const imageUploadEl = document.getElementById('image-upload');
 const btnAddRow = document.getElementById('btn-add-row');
 const btnDownload = document.getElementById('btn-download');
+const btnPublish = document.getElementById('btn-publish');
+const btnHub = document.getElementById('btn-hub');
+const authArea = document.getElementById('auth-area');
+const authModal = document.getElementById('auth-modal');
+const authForm = document.getElementById('auth-form');
+const authClose = document.getElementById('auth-close');
+const authMessage = document.getElementById('auth-message');
+const editorTitle = document.getElementById('editor-title');
+const templateGrid = document.getElementById('template-grid');
+const communityFeed = document.getElementById('community-feed');
+const communityEmpty = document.getElementById('community-empty');
+const publicationCount = document.getElementById('publication-count');
 
 const imageModal = document.getElementById('image-modal');
 const modalTitle = document.getElementById('modal-title');
@@ -38,6 +70,118 @@ const modalImg = document.getElementById('modal-img');
 const modalClose = document.getElementById('modal-close');
 
 let currentModalImageId = null;
+
+// ---------- Hub, autenticação e comunidade ----------
+
+const photoSources = {
+  games: [
+    'photo-1542751371-adc38448a05e', 'photo-1493711662062-fa541adb3fc8', 'photo-1511512578047-dfb367046420', 'photo-1598550476439-6847785fcea6',
+    'photo-1603481546238-487240415921', 'photo-1593305841991-05c297ba4575', 'photo-1550745165-9bc0b252726f', 'photo-1552820728-8b83bb6b773f',
+  ],
+  movies: [
+    'photo-1489599849927-2ee91cede3ba', 'photo-1517604931442-7e0c8ed2963c', 'photo-1485846234645-a62644f84728', 'photo-1500534314209-a25ddb2bd429',
+    'photo-1506157786151-b8491531f063', 'photo-1440404653325-ab127d49abc1', 'photo-1595769816263-9b910be24d5f', 'photo-1586899028174-e7098604235b',
+  ],
+  food: [
+    'photo-1565299624946-b28f40a0ae38', 'photo-1579871494447-9811cf80d66c', 'photo-1568901346375-23c9450c58cd', 'photo-1490474418585-ba9bad8fd0ea',
+    'photo-1515003197210-e0cd71810b5f', 'photo-1482049016688-2d3e1b311543', 'photo-1504674900247-0877df9cc836', 'photo-1547592180-85f173990554',
+  ],
+  anime: [
+    'photo-1541562232579-512a21360020', 'photo-1528360983277-13d401cdc186', 'photo-1519608487953-e999c86e7459', 'photo-1531058020387-3be344556be6',
+    'photo-1522383225653-ed111181a951', 'photo-1518709268805-4e9042af9f23', 'photo-1531501410720-c8d437636169', 'photo-1545569341-9eb8b30979d9',
+  ],
+};
+
+/** Fotos reais de stock, otimizadas em 320px para os cards da tier list. */
+function createTemplateImage(templateId, index, gameId) {
+  if (templateId === 'games' && gameId) {
+    return `https://cdn.cloudflare.steamstatic.com/steam/apps/${gameId}/header.jpg`;
+  }
+  const source = photoSources[templateId][index % photoSources[templateId].length];
+  return `https://images.unsplash.com/${source}?auto=format&fit=crop&w=320&h=320&q=85`;
+}
+
+function renderTemplates() {
+  if (!templateGrid) return;
+  templateGrid.innerHTML = templates.map((template) => `
+    <article class="group overflow-hidden rounded-xl border border-gray-800 bg-gray-900 transition hover:-translate-y-1 hover:border-indigo-500/60 hover:shadow-lg hover:shadow-indigo-950/50">
+      <div class="bg-gradient-to-br ${template.accent} p-4"><span class="text-3xl">${template.icon}</span></div>
+      <div class="p-4"><h3 class="font-bold text-white">${template.title}</h3><p class="mt-1 min-h-10 text-sm text-gray-400">${template.description}</p>
+        <button data-template-id="${template.id}" class="mt-4 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-bold text-gray-100 transition hover:border-indigo-400 hover:bg-indigo-600">Usar template</button>
+      </div>
+    </article>`).join('');
+  templateGrid.querySelectorAll('[data-template-id]').forEach((button) => button.addEventListener('click', () => loadTemplate(button.dataset.templateId)));
+}
+
+function loadTemplate(templateId) {
+  const template = templates.find((item) => item.id === templateId);
+  if (!template) return;
+  Object.values(images).forEach((img) => { if (img.url.startsWith('blob:')) URL.revokeObjectURL(img.url); });
+  tiers = defaultTiers();
+  images = {};
+  unassignedIds = [];
+  currentListTitle = template.title;
+  template.items.forEach(([name, , gameId], index) => {
+    const id = `template-${template.id}-${index}`;
+    images[id] = { id, name, url: createTemplateImage(template.id, index, gameId) };
+    unassignedIds.push(id);
+  });
+  render();
+  document.getElementById('tier-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderAuth() {
+  if (!authArea) return;
+  if (!currentUser) {
+    authArea.innerHTML = '<button id="btn-login" class="rounded-lg border border-gray-700 px-3 py-2 text-sm font-bold text-gray-200 transition hover:border-indigo-400 hover:bg-gray-800">Entrar</button>';
+    document.getElementById('btn-login').addEventListener('click', () => openAuthModal());
+    return;
+  }
+  authArea.innerHTML = `<div class="flex items-center gap-2"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 text-sm font-extrabold text-white">${currentUser.avatar}</span><div class="hidden lg:block leading-tight"><p class="max-w-24 truncate text-xs font-bold text-white">${currentUser.name}</p><button id="btn-logout" class="text-[11px] text-gray-400 hover:text-red-400">Sair</button></div></div>`;
+  document.getElementById('btn-logout')?.addEventListener('click', logout);
+}
+
+function openAuthModal(message = 'Crie uma identidade rápida. Nenhum dado é enviado ou salvo.') {
+  authMessage.textContent = message;
+  authModal.classList.remove('hidden');
+  authModal.classList.add('flex');
+  document.getElementById('auth-name').focus();
+}
+
+function closeAuthModal() { authModal.classList.add('hidden'); authModal.classList.remove('flex'); }
+
+function logout() { currentUser = null; renderAuth(); }
+
+function publishTierList() {
+  if (!currentUser) {
+    openAuthModal('Para publicar sua tier list na comunidade, entre com uma conta fictícia.');
+    return;
+  }
+  publications.unshift({ title: currentListTitle, author: currentUser.name, avatar: currentUser.avatar, total: Object.keys(images).length, date: new Date().toLocaleDateString('pt-BR'), template: templates.find((template) => template.title === currentListTitle)?.icon || '🏆' });
+  renderCommunity();
+  document.getElementById('community-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderCommunity() {
+  publicationCount.textContent = `${publications.length} ${publications.length === 1 ? 'publicação' : 'publicações'}`;
+  communityEmpty.classList.toggle('hidden', publications.length > 0);
+  communityFeed.innerHTML = publications.map((post) => `<article class="rounded-xl border border-gray-800 bg-gray-900 p-5 shadow-lg"><div class="flex items-start gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 font-bold text-white">${post.avatar}</span><div class="min-w-0 flex-1"><p class="font-bold text-white">${post.author}</p><p class="text-xs text-gray-500">Publicado em ${post.date}</p></div><span class="text-2xl">${post.template}</span></div><h3 class="mt-4 text-lg font-extrabold text-white">${post.title}</h3><p class="mt-1 text-sm text-gray-400">${post.total} imagens classificadas</p><div class="mt-4 h-1.5 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-amber-400"></div></article>`).join('');
+}
+
+authClose?.addEventListener('click', closeAuthModal);
+authModal?.addEventListener('click', (event) => { if (event.target === authModal) closeAuthModal(); });
+authForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = document.getElementById('auth-name').value.trim();
+  const email = document.getElementById('auth-email').value.trim();
+  const avatar = document.getElementById('auth-avatar').value.trim().slice(0, 2).toUpperCase() || name.charAt(0).toUpperCase();
+  if (!name || !email) return;
+  currentUser = { name, email, avatar, loggedIn: true };
+  renderAuth();
+  closeAuthModal();
+});
+btnPublish?.addEventListener('click', publishTierList);
+btnHub?.addEventListener('click', () => document.getElementById('hub-section').scrollIntoView({ behavior: 'smooth' }));
 
 // ---------- Modal & Ações de Imagem ----------
 
@@ -73,12 +217,15 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !imageModal.classList.contains('hidden')) {
     closeModal();
   }
+  if (e.key === 'Escape' && !authModal.classList.contains('hidden')) {
+    closeAuthModal();
+  }
 });
 
 function deleteImage(imageId) {
   if (!images[imageId]) return;
 
-  if (images[imageId].url) {
+  if (images[imageId].url.startsWith('blob:')) {
     URL.revokeObjectURL(images[imageId].url);
   }
 
@@ -98,6 +245,7 @@ function render() {
   renderTiers();
   renderPool();
   updateStats();
+  if (editorTitle) editorTitle.textContent = currentListTitle;
 }
 
 function updateStats() {
@@ -250,6 +398,9 @@ function createDraggableImage(imgData) {
   wrapper.dataset.imageId = imgData.id;
 
   const img = document.createElement('img');
+  // O CDN do Unsplash aceita CORS, preservando a exportação da tier list em PNG.
+  // As capas oficiais da Steam não precisam desse atributo para serem exibidas.
+  if (imgData.url.includes('images.unsplash.com')) img.crossOrigin = 'anonymous';
   img.src = imgData.url;
   img.alt = imgData.name;
   img.className = 'w-full h-full object-cover pointer-events-none';
@@ -415,7 +566,7 @@ imageUploadEl.addEventListener('change', (e) => {
 // Cleanup de URLs ao fechar a página
 window.addEventListener('beforeunload', () => {
   Object.values(images).forEach((img) => {
-    URL.revokeObjectURL(img.url);
+    if (img.url.startsWith('blob:')) URL.revokeObjectURL(img.url);
   });
 });
 
@@ -479,4 +630,7 @@ btnDownload.addEventListener('click', async () => {
 
 // ---------- Render inicial ----------
 
+renderTemplates();
+renderAuth();
+renderCommunity();
 render();

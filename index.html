@@ -30,6 +30,9 @@
     </div>
 
     <div class="flex items-center gap-2 md:gap-3">
+      <button id="btn-hub" class="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
+        <span>Explorar</span>
+      </button>
       <!-- Upload button -->
       <label
         for="image-upload"
@@ -63,11 +66,41 @@
         </svg>
         <span class="hidden md:inline">Baixar PNG</span>
       </button>
+      <button id="btn-publish" class="group flex items-center gap-2 px-3 py-2 md:px-4 bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-fuchsia-500/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer">
+        <span>Publicar</span>
+      </button>
+      <div id="auth-area"></div>
     </div>
   </nav>
 
   <!-- ======== MAIN CONTENT ======== -->
   <main class="max-w-6xl mx-auto px-3 py-6 md:px-6 lg:px-8">
+    <section class="mb-8 rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/70 via-gray-900 to-fuchsia-950/40 p-5 md:p-8 shadow-xl shadow-indigo-950/20">
+      <div class="max-w-2xl">
+        <span class="inline-flex rounded-full border border-indigo-400/30 bg-indigo-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-indigo-300">Crie, compare e compartilhe</span>
+        <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white md:text-4xl">Sua opinião merece uma tier list.</h2>
+        <p class="mt-3 text-gray-300">Comece com um modelo pronto ou monte tudo do seu jeito. Publique suas listas para a comunidade depois de entrar.</p>
+      </div>
+    </section>
+
+    <section id="hub-section" class="mb-8 scroll-mt-24">
+      <div class="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-widest text-indigo-400">Hub de ideias</p>
+          <h2 class="mt-1 text-2xl font-extrabold text-white">Templates predefinidos</h2>
+        </div>
+        <span class="hidden text-sm text-gray-400 sm:block">Clique em um modelo para começar</span>
+      </div>
+      <div id="template-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
+    </section>
+
+    <div class="mb-4 flex items-center justify-between">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-amber-400">Editor</p>
+        <h2 id="editor-title" class="mt-1 text-2xl font-extrabold text-white">Minha Tier List</h2>
+      </div>
+      <span class="text-xs text-gray-500">Arraste as imagens para classificar</span>
+    </div>
 
     <!-- Tier rows container (export target) -->
     <div id="tier-container" class="flex flex-col gap-1 rounded-xl overflow-hidden shadow-2xl shadow-black/60 border border-gray-800/80">
@@ -93,6 +126,18 @@
         Faça upload de imagens usando o botão acima ☝️
       </p>
     </div>
+
+    <section id="community-section" class="mt-12 scroll-mt-24">
+      <div class="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-widest text-fuchsia-400">Comunidade</p>
+          <h2 class="mt-1 text-2xl font-extrabold text-white">Tier lists publicadas</h2>
+        </div>
+        <span id="publication-count" class="text-sm text-gray-400">0 publicações</span>
+      </div>
+      <div id="community-feed" class="grid gap-4 md:grid-cols-2"></div>
+      <div id="community-empty" class="rounded-xl border border-dashed border-gray-700 bg-gray-900/40 p-8 text-center text-sm text-gray-500">A comunidade está esperando sua primeira publicação.</div>
+    </section>
   </main>
 
   <!-- ======== MODAL DE VISUALIZAÇÃO AMPLIADA ======== -->
@@ -127,6 +172,24 @@
           class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-2xl transition-transform duration-300 hover:scale-105"
         />
       </div>
+    </div>
+  </div>
+
+  <div id="auth-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 p-4 backdrop-blur-md" aria-hidden="true">
+    <div class="w-full max-w-md overflow-hidden rounded-2xl border border-gray-700 bg-gray-900 shadow-2xl animate-modal-entry">
+      <div class="border-b border-gray-800 px-6 py-5">
+        <div class="flex items-start justify-between gap-4">
+          <div><p id="auth-kicker" class="text-xs font-bold uppercase tracking-widest text-indigo-400">Conta fictícia</p><h3 id="auth-title" class="mt-1 text-xl font-extrabold text-white">Entre para publicar</h3></div>
+          <button id="auth-close" class="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white" aria-label="Fechar">✕</button>
+        </div>
+        <p id="auth-message" class="mt-2 text-sm text-gray-400">Crie uma identidade rápida. Nenhum dado é enviado ou salvo.</p>
+      </div>
+      <form id="auth-form" class="space-y-4 p-6">
+        <label class="block text-sm font-medium text-gray-300">Nome de exibição<input id="auth-name" required maxlength="30" placeholder="Ex.: Rafael" class="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none transition focus:border-indigo-500" /></label>
+        <label class="block text-sm font-medium text-gray-300">E-mail ou usuário<input id="auth-email" required maxlength="60" placeholder="rafael@email.com" class="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white outline-none transition focus:border-indigo-500" /></label>
+        <label class="block text-sm font-medium text-gray-300">Avatar (uma letra)<input id="auth-avatar" maxlength="2" placeholder="R" class="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2.5 text-white uppercase outline-none transition focus:border-indigo-500" /></label>
+        <button class="w-full rounded-lg bg-indigo-600 px-4 py-3 font-bold text-white transition hover:bg-indigo-500">Entrar e continuar</button>
+      </form>
     </div>
   </div>
 
