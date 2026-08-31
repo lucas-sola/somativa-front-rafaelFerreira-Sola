@@ -1443,6 +1443,11 @@ video {
   letter-spacing: 0.1em;
 }
 
+.text-amber-300 {
+  --tw-text-opacity: 1;
+  color: rgb(252 211 77 / var(--tw-text-opacity, 1));
+}
+
 .text-amber-400 {
   --tw-text-opacity: 1;
   color: rgb(251 191 36 / var(--tw-text-opacity, 1));
@@ -1704,6 +1709,236 @@ video {
   animation: modalScale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* ============================================================
+   Tema claro / escuro — regras FORA de @layer para vencer
+   qualquer utilitário Tailwind (bg-gray-950, text-gray-100, etc.).
+   ============================================================ */
+
+body.light-mode {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* ---------- Navbar ---------- */
+
+.light-mode #main-nav {
+  border-color: #e2e8f0;
+  background-color: rgb(255 255 255 / 0.9);
+  box-shadow: 0 4px 6px -3px rgb(203 213 225 / 0.5);
+}
+
+.light-mode #main-nav .text-gray-300,
+.light-mode #main-nav .text-gray-400 {
+  color: #475569;
+}
+
+.light-mode #main-nav .bg-gray-800,
+.light-mode #main-nav .bg-gray-900 {
+  border-color: #e2e8f0;
+  background-color: #f1f5f9;
+}
+
+.light-mode #main-nav .bg-gray-800\/80,
+.light-mode #main-nav .bg-gray-900\/80,
+.light-mode #main-nav .bg-gray-900\/95 {
+  background-color: #e2e8f0;
+}
+
+.light-mode #nav-stats {
+  background-color: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+/* ---------- Hero section ---------- */
+
+.light-mode main > section:first-child {
+  border-color: #c7d2fe;
+  background: linear-gradient(to bottom right, #e0e7ff, #fff, #fae8ff);
+  box-shadow: 0 10px 15px -3px rgb(199 210 254 / 0.5);
+}
+
+.light-mode main > section:first-child h2,
+.light-mode main > section:first-child p {
+  color: #0f172a;
+}
+
+/* ---------- Typography ---------- */
+
+.light-mode main h2,
+.light-mode main h3 {
+  color: #0f172a;
+}
+
+.light-mode main .text-gray-400,
+.light-mode main .text-gray-500 {
+  color: #475569;
+}
+
+.light-mode .text-gray-100,
+.light-mode .text-white {
+  color: #0f172a;
+}
+
+.light-mode .text-gray-300 {
+  color: #334155;
+}
+
+/* ---------- Cards (templates + community) ---------- */
+
+.light-mode #template-grid > article,
+.light-mode #community-feed > article,
+.light-mode #community-empty {
+  border-color: #e2e8f0;
+  background-color: #fff;
+  box-shadow: 0 4px 6px -1px rgb(226 232 240 / 0.7);
+}
+
+.light-mode #template-grid > article .bg-gray-900,
+.light-mode #template-grid > article .bg-gray-800 {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* ---------- Image pool ---------- */
+
+.light-mode #image-pool {
+  border-color: #cbd5e1;
+  background-color: #fff;
+}
+
+.light-mode #pool-images {
+  background-color: transparent;
+}
+
+.light-mode #image-pool .border-gray-700\/80 {
+  border-color: #cbd5e1;
+}
+
+.light-mode #image-pool .border-gray-700 {
+  border-color: #cbd5e1;
+}
+
+/* ---------- Tier container ---------- */
+
+.light-mode #tier-container {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgb(203 213 225 / 0.7);
+}
+
+.light-mode #tier-container > div {
+  background-color: #f1f5f9;
+}
+
+.light-mode #tier-container .bg-gray-800 {
+  background-color: #f1f5f9;
+}
+
+.light-mode #tier-container button.bg-gray-800 {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.light-mode #tier-container .border-gray-700,
+.light-mode #tier-container .border-gray-700\/80 {
+  border-color: #cbd5e1;
+}
+
+/* ---------- Image cards (draggable wrappers) ---------- */
+
+.light-mode .border-gray-700\/80 {
+  border-color: #cbd5e1;
+}
+
+.light-mode .bg-gray-800\/90 {
+  background-color: #e2e8f0;
+}
+
+.light-mode .bg-black\/75 {
+  background-color: rgb(15 23 42 / 0.75);
+}
+
+/* ---------- Modals ---------- */
+
+.light-mode #image-modal {
+  background-color: rgb(15 23 42 / 0.5);
+}
+
+.light-mode #image-modal > div {
+  background-color: #fff;
+  border-color: #e2e8f0;
+}
+
+.light-mode #image-modal .bg-gray-900\/90 {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.light-mode #image-modal .bg-gray-950 {
+  background-color: #f8fafc;
+}
+
+.light-mode #modal-title,
+.light-mode #modal-close {
+  color: #0f172a;
+}
+
+.light-mode #auth-modal > div {
+  background-color: #fff;
+  border-color: #e2e8f0;
+}
+
+.light-mode #auth-modal .bg-gray-900 {
+  background-color: #fff;
+  border-color: #e2e8f0;
+}
+
+.light-mode #auth-modal .bg-gray-950 {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.light-mode #auth-modal .border-gray-800 {
+  border-color: #e2e8f0;
+}
+
+/* ---------- Auth buttons ---------- */
+
+.light-mode #btn-login {
+  border-color: #e2e8f0;
+  color: #1e293b;
+  background-color: #f8fafc;
+}
+
+.light-mode #auth-area .border-gray-700 {
+  border-color: #e2e8f0;
+}
+
+/* ---------- Scrollbar / misc ---------- */
+
+.light-mode .shadow-black\/60 {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+}
+
+/* ---------- Smooth transition ---------- */
+
+body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.light-mode #main-nav,
+.light-mode #main-nav > div {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.light-mode #tier-container > div,
+.light-mode #image-pool,
+.light-mode #template-grid > article,
+.light-mode #community-feed > article {
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
 .hover\:z-20:hover {
   z-index: 20;
 }
@@ -1746,6 +1981,11 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.hover\:border-amber-400:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(251 191 36 / var(--tw-border-opacity, 1));
+}
+
 .hover\:border-indigo-400:hover {
   --tw-border-opacity: 1;
   border-color: rgb(129 140 248 / var(--tw-border-opacity, 1));
@@ -1776,6 +2016,11 @@ video {
 .hover\:bg-fuchsia-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(217 70 239 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-gray-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-gray-800:hover {
