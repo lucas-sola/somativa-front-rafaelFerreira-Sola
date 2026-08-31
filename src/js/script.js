@@ -79,6 +79,8 @@ const btnAddRow = document.getElementById('btn-add-row');
 const btnDownload = document.getElementById('btn-download');
 const btnPublish = document.getElementById('btn-publish');
 const btnHub = document.getElementById('btn-hub');
+const btnTheme = document.getElementById('btn-theme');
+const themeIcon = document.getElementById('theme-icon');
 const authArea = document.getElementById('auth-area');
 const authModal = document.getElementById('auth-modal');
 const authForm = document.getElementById('auth-form');
@@ -98,6 +100,19 @@ const modalClose = document.getElementById('modal-close');
 let currentModalImageId = null;
 
 // ---------- Hub, autenticação e comunidade ----------
+
+function setTheme(theme) {
+  const isLight = theme === 'light';
+  document.body.classList.toggle('light-mode', isLight);
+  themeIcon.textContent = isLight ? '🌙' : '☀️';
+  btnTheme.setAttribute('aria-label', isLight ? 'Ativar modo escuro' : 'Ativar modo claro');
+  btnTheme.title = isLight ? 'Ativar modo escuro' : 'Ativar modo claro';
+  localStorage.setItem('tierlist-theme', theme);
+}
+
+btnTheme?.addEventListener('click', () => {
+  setTheme(document.body.classList.contains('light-mode') ? 'dark' : 'light');
+});
 
 const photoSources = {
   games: [
@@ -673,6 +688,7 @@ btnDownload.addEventListener('click', async () => {
 
 // ---------- Render inicial ----------
 
+setTheme(localStorage.getItem('tierlist-theme') || 'dark');
 renderTemplates();
 renderAuth();
 renderCommunity();
