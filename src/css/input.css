@@ -2,6 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tema claro: mantém os botões de ação coloridos e adapta as superfícies do app. */
+@layer base {
+  body.light-mode {
+    @apply bg-slate-100 text-slate-900;
+  }
+
+  .light-mode #main-nav {
+    @apply border-slate-200 bg-white/90 shadow-slate-300/50;
+  }
+
+  .light-mode #main-nav .text-gray-300,
+  .light-mode #main-nav .text-gray-400 {
+    @apply text-slate-600;
+  }
+
+  .light-mode #main-nav .bg-gray-800,
+  .light-mode #main-nav .bg-gray-900 {
+    @apply border-slate-200 bg-slate-100;
+  }
+
+  .light-mode main > section:first-child {
+    @apply border-indigo-200 bg-gradient-to-br from-indigo-100 via-white to-fuchsia-100 shadow-indigo-200/50;
+  }
+
+  .light-mode main > section:first-child h2,
+  .light-mode main > section:first-child p {
+    @apply text-slate-900;
+  }
+
+  .light-mode main h2,
+  .light-mode main h3 {
+    @apply text-slate-900;
+  }
+
+  .light-mode main .text-gray-400,
+  .light-mode main .text-gray-500 {
+    @apply text-slate-600;
+  }
+
+  .light-mode #template-grid > article,
+  .light-mode #community-feed > article,
+  .light-mode #community-empty {
+    @apply border-slate-200 bg-white shadow-slate-200/70;
+  }
+
+  .light-mode #image-pool {
+    @apply border-slate-300 bg-white;
+  }
+
+  .light-mode #tier-container {
+    @apply border-slate-300 shadow-slate-300/70;
+  }
+
+  .light-mode #tier-container > div,
+  .light-mode #tier-container button.bg-gray-800 {
+    @apply bg-slate-100;
+  }
+
+  .light-mode #tier-container .border-gray-700,
+  .light-mode #image-pool .border-gray-700 {
+    @apply border-slate-300;
+  }
+}
+
 @layer utilities {
   @keyframes fadeInRow {
     0% {
