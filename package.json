@@ -1,0 +1,12 @@
+{
+  "name": "tierlist-maker",
+  "version": "1.0.0",
+  "description": "Tier List Maker - HTML + Tailwind v3 + JS Puro",
+  "scripts": {
+    "build": "npx tailwindcss -i ./src/css/input.css -o ./src/css/output.css",
+    "watch": "npx tailwindcss -i ./src/css/input.css -o ./src/css/output.css --watch"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
