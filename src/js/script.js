@@ -37,8 +37,8 @@ const defaultTiers = () => [
 ];
 
 const templates = [
-  { id: 'games', title: 'Jogos inesquecíveis', description: '16 jogos com capas oficiais para ranquear.', icon: '🎮', accent: 'from-violet-600 to-indigo-600', items: [['Hades', '🔥', '1145360'], ['Elden Ring', '⚔️', '1245620'], ['Red Dead Redemption 2', '🤠', '1174180'], ['GTA V', '🚗', '271590'], ['God of War', '🪓', '1593500'], ['The Last of Us Part I', '🎸', '1888930'], ['Cyberpunk 2077', '🤖', '1091500'], ['Baldur’s Gate 3', '🐉', '1086940'], ['Stardew Valley', '🌾', '413150'], ['Hollow Knight', '🐞', '367520'], ['Celeste', '🏔️', '504230'], ['Cuphead', '☕', '268910'], ['Among Us', '👨‍🚀', '945360'], ['Terraria', '🌲', '105600'], ['Dead by Daylight', '🪝', '381210'], ['It Takes Two', '🧶', '1426210']] },
-  { id: 'movies', title: 'Filmes para maratonar', description: '16 filmes do cult à aventura, para uma lista completa.', icon: '🎬', accent: 'from-red-600 to-orange-500', items: [['Interestelar', '🚀'], ['Parasita', '🏠'], ['Shrek', '🧅'], ['Barbie', '🎀'], ['Matrix', '💊'], ['Duna', '🏜️'], ['O Poderoso Chefão', '🍝'], ['Cidade de Deus', '🌇'], ['A Viagem de Chihiro', '🐉'], ['Vingadores Ultimato', '🦸'], ['Corra!', '🫣'], ['Clube da Luta', '🥊'], ['Mad Max', '🏎️'], ['Toy Story', '🤠'], ['Pantera Negra', '🐾'], ['Tudo em Todo Lugar', '🌌']] },
+  { id: 'games', title: 'Jogos inesquecíveis', description: '16 jogos com as capas enviadas por você.', icon: '🎮', accent: 'from-violet-600 to-indigo-600', items: [['Hades', '🔥', 'hades.png'], ['Elden Ring', '⚔️', 'elden-ring.png'], ['Red Dead Redemption 2', '🤠', 'red-dead-redemption-2.png'], ['GTA V', '🚗', 'gta-v.png'], ['God of War', '🪓', 'god-of-war.png'], ['The Last of Us Part I', '🎸', 'the-last-of-us-part-1.png'], ['Cyberpunk 2077', '🤖', 'cyberpunk-2077.png'], ['Baldur’s Gate 3', '🐉', 'baldurs-gate-3.png'], ['Stardew Valley', '🌾', 'stardew-valley.png'], ['Hollow Knight', '🐞', 'hollow-knight.png'], ['Celeste', '🏔️', 'celeste.png'], ['Cuphead', '☕', 'cuphead.png'], ['Among Us', '👨‍🚀', 'among-us.png'], ['Terraria', '🌲', 'terraria.png'], ['Dead by Daylight', '🪝', 'dead-by-daylight.png'], ['It Takes Two', '🧶', 'it-takes-two.png']] },
+  { id: 'movies', title: 'Filmes para maratonar', description: 'Capas reais dos filmes escolhidos para ranquear.', icon: '🎬', accent: 'from-red-600 to-orange-500', items: [['Interestelar', '🚀', 'interestelar.png'], ['Parasita', '🏠', 'parasita.png'], ['Shrek', '🧅', 'shrek.png'], ['Barbie', '🎀'], ['Matrix', '💊', 'matrix.png'], ['Duna', '🏜️', 'duna.png'], ['O Poderoso Chefão', '🍝', 'o-poderoso-chefao.png'], ['Cidade de Deus', '🌇', 'cidade-de-deus.png'], ['A Viagem de Chihiro', '🐉', 'a-viagem-de-chihiro.png'], ['Vingadores Ultimato', '🦸', 'vingadores-ultimato.png'], ['Corra!', '🫣', 'corra.png'], ['Clube da Luta', '🥊', 'clube-da-luta.png'], ['Mad Max', '🏎️', 'mad-max.png'], ['Toy Story', '🤠', 'toy-story.png'], ['Pantera Negra', '🐾', 'pantera-negra.png'], ['Tudo em Todo Lugar', '🌌', 'tudo-em-todo-lugar.png']] },
   { id: 'food', title: 'Comidas favoritas', description: '16 sabores brasileiros e do mundo para decidir o topo.', icon: '🍔', accent: 'from-amber-500 to-rose-500', items: [['Pizza', '🍕'], ['Sushi', '🍣'], ['Hambúrguer', '🍔'], ['Açaí', '🫐'], ['Brigadeiro', '🍫'], ['Coxinha', '🍗'], ['Feijoada', '🫘'], ['Lasanha', '🍝'], ['Pão de queijo', '🧀'], ['Pastel', '🥟'], ['Tacos', '🌮'], ['Ramen', '🍜'], ['Churrasco', '🥩'], ['Sorvete', '🍨'], ['Pudim', '🍮'], ['Batata frita', '🍟']] },
   { id: 'anime', title: 'Universo dos animes', description: '16 personagens e títulos que marcaram gerações.', icon: '⚡', accent: 'from-cyan-500 to-fuchsia-600', items: [['Naruto', '🍥'], ['Goku', '🐉'], ['Luffy', '🏴‍☠️'], ['Gojo', '🕶️'], ['Tanjiro', '🌊'], ['Mikasa', '⚔️'], ['Levi', '🪽'], ['Saitama', '👊'], ['Sailor Moon', '🌙'], ['Ichigo', '🟠'], ['Edward Elric', '🦾'], ['Light Yagami', '📓'], ['Spike Spiegel', '🚬'], ['Hinata', '🏐'], ['Eren', '🧣'], ['Frieren', '🪄']] },
 ];
@@ -93,9 +93,9 @@ const photoSources = {
 };
 
 /** Fotos reais de stock, otimizadas em 320px para os cards da tier list. */
-function createTemplateImage(templateId, index, gameId) {
-  if (templateId === 'games' && gameId) {
-    return `https://cdn.cloudflare.steamstatic.com/steam/apps/${gameId}/header.jpg`;
+function createTemplateImage(templateId, index, localImage) {
+  if (localImage) {
+    return `./src/assets/${templateId}/${localImage}`;
   }
   const source = photoSources[templateId][index % photoSources[templateId].length];
   return `https://images.unsplash.com/${source}?auto=format&fit=crop&w=320&h=320&q=85`;
@@ -121,9 +121,9 @@ function loadTemplate(templateId) {
   images = {};
   unassignedIds = [];
   currentListTitle = template.title;
-  template.items.forEach(([name, , gameId], index) => {
+  template.items.forEach(([name, , localImage], index) => {
     const id = `template-${template.id}-${index}`;
-    images[id] = { id, name, url: createTemplateImage(template.id, index, gameId) };
+    images[id] = { id, name, url: createTemplateImage(template.id, index, localImage) };
     unassignedIds.push(id);
   });
   render();
