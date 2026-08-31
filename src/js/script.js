@@ -20,13 +20,38 @@ let images = {};
 /** @type {string[]} */
 let unassignedIds = [];
 
+// Pre-carregar as imagens da categoria de comidas.
+const initialFoodImages = [
+  { id: 'food-vegeta-onigiri', name: 'Onigiri Vegeta', url: './src/assets/food/vegeta-onigiri.png' },
+  { id: 'food-pizza-pepperoni', name: 'Pizza Pepperoni', url: './src/assets/food/pizza-pepperoni.jpg' },
+  { id: 'food-hamburguer', name: 'Hambúrguer', url: './src/assets/food/hamburguer.jpg' },
+  { id: 'food-acai', name: 'Açaí', url: './src/assets/food/acai.jpg' },
+  { id: 'food-brigadeiros', name: 'Brigadeiros', url: './src/assets/food/brigadeiros.png' },
+  { id: 'food-coxinha', name: 'Coxinha', url: './src/assets/food/coxinha.jpg' },
+  { id: 'food-feijoada', name: 'Feijoada', url: './src/assets/food/feijoada.jpg' },
+  { id: 'food-lasanha', name: 'Lasanha', url: './src/assets/food/lasanha.jpg' },
+  { id: 'food-pao-de-queijo', name: 'Pão de Queijo', url: './src/assets/food/pao-de-queijo.png' },
+  { id: 'food-pastel', name: 'Pastel', url: './src/assets/food/pastel.png' },
+  { id: 'food-tacos', name: 'Tacos', url: './src/assets/food/tacos.png' },
+  { id: 'food-ramen', name: 'Ramen', url: './src/assets/food/ramen.png' },
+  { id: 'food-churrasco', name: 'Churrasco', url: './src/assets/food/churrasco.png' },
+  { id: 'food-sorvete', name: 'Sorvete', url: './src/assets/food/sorvete.png' },
+  { id: 'food-pudim', name: 'Pudim', url: './src/assets/food/pudim.png' },
+  { id: 'food-batata-frita', name: 'Batata frita', url: './src/assets/food/batata-frita.jpg' },
+];
+
+initialFoodImages.forEach((img) => {
+  images[img.id] = img;
+  unassignedIds.push(img.id);
+});
+
 /** ID da imagem sendo arrastada */
 let draggedImageId = null;
 
 /** Sessão e publicações simuladas: permanecem apenas enquanto a página estiver aberta. */
 let currentUser = null;
 let publications = [];
-let currentListTitle = 'Minha Tier List';
+let currentListTitle = 'Comidas favoritas';
 
 const defaultTiers = () => [
   { id: 'S', label: 'S', color: '#FF7F7F', imageIds: [] },
@@ -37,10 +62,11 @@ const defaultTiers = () => [
 ];
 
 const templates = [
+  { id: 'custom', title: 'Criar minha tier list', description: 'Escolha um nome e envie suas próprias imagens.', icon: '✨', accent: 'from-emerald-500 to-cyan-600', items: [] },
   { id: 'games', title: 'Jogos inesquecíveis', description: '16 jogos com as capas enviadas por você.', icon: '🎮', accent: 'from-violet-600 to-indigo-600', items: [['Hades', '🔥', 'hades.png'], ['Elden Ring', '⚔️', 'elden-ring.png'], ['Red Dead Redemption 2', '🤠', 'red-dead-redemption-2.png'], ['GTA V', '🚗', 'gta-v.png'], ['God of War', '🪓', 'god-of-war.png'], ['The Last of Us Part I', '🎸', 'the-last-of-us-part-1.png'], ['Cyberpunk 2077', '🤖', 'cyberpunk-2077.png'], ['Baldur’s Gate 3', '🐉', 'baldurs-gate-3.png'], ['Stardew Valley', '🌾', 'stardew-valley.png'], ['Hollow Knight', '🐞', 'hollow-knight.png'], ['Celeste', '🏔️', 'celeste.png'], ['Cuphead', '☕', 'cuphead.png'], ['Among Us', '👨‍🚀', 'among-us.png'], ['Terraria', '🌲', 'terraria.png'], ['Dead by Daylight', '🪝', 'dead-by-daylight.png'], ['It Takes Two', '🧶', 'it-takes-two.png']] },
-  { id: 'movies', title: 'Filmes para maratonar', description: 'Capas reais dos filmes escolhidos para ranquear.', icon: '🎬', accent: 'from-red-600 to-orange-500', items: [['Interestelar', '🚀', 'interestelar.png'], ['Parasita', '🏠', 'parasita.png'], ['Shrek', '🧅', 'shrek.png'], ['Barbie', '🎀'], ['Matrix', '💊', 'matrix.png'], ['Duna', '🏜️', 'duna.png'], ['O Poderoso Chefão', '🍝', 'o-poderoso-chefao.png'], ['Cidade de Deus', '🌇', 'cidade-de-deus.png'], ['A Viagem de Chihiro', '🐉', 'a-viagem-de-chihiro.png'], ['Vingadores Ultimato', '🦸', 'vingadores-ultimato.png'], ['Corra!', '🫣', 'corra.png'], ['Clube da Luta', '🥊', 'clube-da-luta.png'], ['Mad Max', '🏎️', 'mad-max.png'], ['Toy Story', '🤠', 'toy-story.png'], ['Pantera Negra', '🐾', 'pantera-negra.png'], ['Tudo em Todo Lugar', '🌌', 'tudo-em-todo-lugar.png']] },
-  { id: 'food', title: 'Comidas favoritas', description: '16 sabores brasileiros e do mundo para decidir o topo.', icon: '🍔', accent: 'from-amber-500 to-rose-500', items: [['Pizza', '🍕'], ['Sushi', '🍣'], ['Hambúrguer', '🍔'], ['Açaí', '🫐'], ['Brigadeiro', '🍫'], ['Coxinha', '🍗'], ['Feijoada', '🫘'], ['Lasanha', '🍝'], ['Pão de queijo', '🧀'], ['Pastel', '🥟'], ['Tacos', '🌮'], ['Ramen', '🍜'], ['Churrasco', '🥩'], ['Sorvete', '🍨'], ['Pudim', '🍮'], ['Batata frita', '🍟']] },
-  { id: 'anime', title: 'Universo dos animes', description: '16 personagens e títulos que marcaram gerações.', icon: '⚡', accent: 'from-cyan-500 to-fuchsia-600', items: [['Naruto', '🍥'], ['Goku', '🐉'], ['Luffy', '🏴‍☠️'], ['Gojo', '🕶️'], ['Tanjiro', '🌊'], ['Mikasa', '⚔️'], ['Levi', '🪽'], ['Saitama', '👊'], ['Sailor Moon', '🌙'], ['Ichigo', '🟠'], ['Edward Elric', '🦾'], ['Light Yagami', '📓'], ['Spike Spiegel', '🚬'], ['Hinata', '🏐'], ['Eren', '🧣'], ['Frieren', '🪄']] },
+  { id: 'movies', title: 'Filmes inesquecíveis', description: '15 filmes para organizar por preferência.', icon: '🎬', accent: 'from-red-600 to-orange-500', items: [['A Viagem de Chihiro', '🐉', 'a-viagem-de-chihiro.png'], ['Cidade de Deus', '🎞️', 'cidade-de-deus.png'], ['Clube da Luta', '👊', 'clube-da-luta.png'], ['Corra!', '🏃', 'corra.png'], ['Duna', '🏜️', 'duna.png'], ['Interestelar', '🚀', 'interestelar.png'], ['Mad Max', '🚗', 'mad-max.png'], ['Matrix', '💊', 'matrix.png'], ['O Poderoso Chefão', '🎩', 'o-poderoso-chefao.png'], ['Pantera Negra', '🐆', 'pantera-negra.png'], ['Parasita', '🏠', 'parasita.png'], ['Shrek', '🧅', 'shrek.png'], ['Toy Story', '🤠', 'toy-story.png'], ['Tudo em Todo Lugar ao Mesmo Tempo', '🌀', 'tudo-em-todo-lugar.png'], ['Vingadores: Ultimato', '🦸', 'vingadores-ultimato.png']] },
+  { id: 'food', title: 'Comidas favoritas', description: '16 comidas, incluindo batata frita, para você ranquear.', icon: '🍔', accent: 'from-amber-500 to-rose-500', items: [['Onigiri Vegeta', '🍙', 'vegeta-onigiri.png'], ['Pizza Pepperoni', '🍕', 'pizza-pepperoni.jpg'], ['Hambúrguer', '🍔', 'hamburguer.jpg'], ['Açaí', '🫐', 'acai.jpg'], ['Brigadeiros', '🍫', 'brigadeiros.png'], ['Coxinha', '🍗', 'coxinha.jpg'], ['Feijoada', '🫘', 'feijoada.jpg'], ['Lasanha', '🍝', 'lasanha.jpg'], ['Pão de Queijo', '🧀', 'pao-de-queijo.png'], ['Pastel', '🥟', 'pastel.png'], ['Tacos', '🌮', 'tacos.png'], ['Ramen', '🍜', 'ramen.png'], ['Churrasco', '🥩', 'churrasco.png'], ['Sorvete', '🍨', 'sorvete.png'], ['Pudim', '🍮', 'pudim.png'], ['Batata frita', '🍟', 'batata-frita.jpg']] },
+  { id: 'anime', title: 'Universo dos animes', description: '16 personagens com as imagens enviadas para ranquear.', icon: '⚡', accent: 'from-cyan-500 to-fuchsia-600', items: [['Naruto', '🍥', 'naruto.jpg'], ['Goku', '🐉', 'goku.jpg'], ['Luffy', '🏴‍☠️', 'luffy.jpg'], ['Gojo', '🕶️', 'gojo.jpg'], ['Tanjiro', '🌊', 'tanjiro.jpg'], ['Mikasa', '⚔️', 'mikasa.jpg'], ['Levi', '🪽', 'levi.png'], ['Saitama', '👊', 'saitama.png'], ['Sailor Moon', '🌙', 'sailor-moon.jpg'], ['Ichigo', '🟠', 'ichigo.png'], ['Edward Elric', '🦾', 'edward-elric.jpg'], ['Light Yagami', '📓', 'light-yagami.png'], ['Spike Spiegel', '🚬', 'spike-spiegel.png'], ['Sasuke', '⚡', 'sasuke.png'], ['Eren', '🧣', 'eren.png'], ['Frieren', '🪄', 'frieren.png']] },
 ];
 
 // ---------- Seletores DOM ----------
@@ -110,7 +136,24 @@ function renderTemplates() {
         <button data-template-id="${template.id}" class="mt-4 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-bold text-gray-100 transition hover:border-indigo-400 hover:bg-indigo-600">Usar template</button>
       </div>
     </article>`).join('');
-  templateGrid.querySelectorAll('[data-template-id]').forEach((button) => button.addEventListener('click', () => loadTemplate(button.dataset.templateId)));
+  templateGrid.querySelectorAll('[data-template-id]').forEach((button) => button.addEventListener('click', () => {
+    if (button.dataset.templateId === 'custom') createCustomTierList();
+    else loadTemplate(button.dataset.templateId);
+  }));
+}
+
+function createCustomTierList() {
+  const chosenTitle = window.prompt('Qual será o nome da sua tier list?', 'Minha Tier List');
+  if (chosenTitle === null) return;
+
+  Object.values(images).forEach((img) => { if (img.url.startsWith('blob:')) URL.revokeObjectURL(img.url); });
+  tiers = defaultTiers();
+  images = {};
+  unassignedIds = [];
+  currentListTitle = chosenTitle.trim() || 'Minha Tier List';
+  render();
+  document.getElementById('tier-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window.setTimeout(() => imageUploadEl.click(), 300);
 }
 
 function loadTemplate(templateId) {
